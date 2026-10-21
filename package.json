@@ -1,5 +1,5 @@
 {
-  "name": "pi-keycloak-agentgateway",
+  "name": "@raguets/pi-keycloak-agentgateway",
   "version": "1.0.0",
   "description": "Provider Pi natif OAuth Keycloak PKCE pour Agent Gateway",
   "type": "module",
