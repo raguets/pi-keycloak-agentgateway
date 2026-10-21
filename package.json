@@ -1,0 +1,59 @@
+{
+  "name": "pi-keycloak-agentgateway",
+  "version": "1.0.0",
+  "description": "Provider Pi natif OAuth Keycloak PKCE pour Agent Gateway",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "keywords": [
+    "pi-package",
+    "keycloak",
+    "oauth",
+    "agentgateway"
+  ],
+  "pi": {
+    "extensions": [
+      "./dist/index.js"
+    ]
+  },
+  "files": [
+    "dist",
+    "examples",
+    "schema",
+    "docs",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test --test-concurrency=1 tests/*.test.mjs",
+    "test:pi-versions": "npm run build && node scripts/test-pi-versions.mjs",
+    "lint": "biome check src tests scripts package.json tsconfig.json biome.json schema examples",
+    "format": "biome check --write src tests scripts package.json tsconfig.json biome.json schema examples",
+    "ci": "npm run typecheck && npm run lint && npm test",
+    "prepack": "npm run build",
+    "bundle:offline": "node scripts/pack.mjs"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "1.3.0",
+    "@earendil-works/pi-coding-agent": "1.3.0",
+    "@types/node": "22.19.19",
+    "@biomejs/biome": "2.6.2",
+    "typescript": "5.9.3"
+  }
+}

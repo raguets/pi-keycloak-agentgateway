@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/keycloak-agentgateway.schema.json",
+  "logLevel": "warn",
+  "contexts": [
+    {
+      "name": "mon-contexte",
+      "providerId": "agentgateway-mon-contexte",
+      "baseUrl": "https://gateway.example.invalid/v1",
+      "api": "openai-completions",
+      "issuer": "https://keycloak.example.invalid/realms/REALM_A_RENSEIGNER",
+      "clientId": "CLIENT_PUBLIC_A_RENSEIGNER",
+      "scopes": ["openid", "offline_access"],
+      "callbackHost": "127.0.0.1",
+      "callbackPort": 49170,
+      "redirectPath": "/callback",
+      "browserTimeoutSeconds": 300,
+      "deviceTimeoutSeconds": 600,
+      "requestTimeoutSeconds": 10,
+      "gatewayTimeoutSeconds": 300,
+      "refreshLeewaySeconds": 30,
+      "enableDevice": false,
+      "enableManual": false,
+      "reuseRefreshTokenWhenOmitted": false,
+      "models": [
+        {
+          "id": "ID_MODELE_A_RENSEIGNER",
+          "name": "Modèle à valider auprès de l'administrateur",
+          "contextWindow": 128000,
+          "maxTokens": 8192,
+          "input": ["text"],
+          "reasoning": false,
+          "validated": false
+        }
+      ]
+    }
+  ]
+}

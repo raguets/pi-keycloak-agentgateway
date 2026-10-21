@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.npm-cache/
+.test-tmp/
+artifacts/
+coverage/
+*.tgz
+keycloak-agentgateway.json
+!examples/keycloak-agentgateway.json
+auth.json
+.overpowered/

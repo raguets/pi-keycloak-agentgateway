@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pi Keycloak Agent Gateway",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contexts"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "logLevel": { "enum": ["error", "warn", "info", "debug"], "default": "warn" },
+    "contexts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/context" } }
+  },
+  "$defs": {
+    "https": { "type": "string", "format": "uri", "pattern": "^https://[^@?#\\\\]+$" },
+    "positiveSeconds": { "type": "integer", "minimum": 1, "maximum": 3600 },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "baseUrl", "api", "issuer", "clientId", "models"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+        "providerId": { "type": "string", "pattern": "^agentgateway-[a-z0-9][a-z0-9_-]{0,63}$" },
+        "baseUrl": { "$ref": "#/$defs/https" },
+        "issuer": { "$ref": "#/$defs/https" },
+        "api": { "enum": ["openai-completions", "openai-responses"] },
+        "clientId": { "type": "string", "minLength": 1 },
+        "scopes": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[\\x21\\x23-\\x5b\\x5d-\\x7e]+$" },
+          "default": ["openid", "offline_access"]
+        },
+        "callbackHost": { "const": "127.0.0.1" },
+        "callbackPort": { "type": "integer", "minimum": 1, "maximum": 65535, "default": 49170 },
+        "redirectPath": {
+          "type": "string",
+          "pattern": "^/(?:[a-zA-Z0-9_-]+/?)*$",
+          "default": "/callback"
+        },
+        "browserTimeoutSeconds": { "$ref": "#/$defs/positiveSeconds", "default": 300 },
+        "deviceTimeoutSeconds": { "$ref": "#/$defs/positiveSeconds", "default": 600 },
+        "requestTimeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 120, "default": 10 },
+        "gatewayTimeoutSeconds": { "$ref": "#/$defs/positiveSeconds", "default": 300 },
+        "refreshLeewaySeconds": { "type": "integer", "minimum": 0, "maximum": 300, "default": 30 },
+        "enableDevice": { "type": "boolean", "default": false },
+        "enableManual": { "type": "boolean", "default": false },
+        "reuseRefreshTokenWhenOmitted": { "type": "boolean", "default": false },
+        "models": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/model" } }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "contextWindow", "maxTokens", "input", "reasoning"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "contextWindow": { "type": "integer", "minimum": 1, "maximum": 100000000 },
+        "maxTokens": { "type": "integer", "minimum": 1, "maximum": 100000000 },
+        "input": { "type": "array", "minItems": 1, "items": { "enum": ["text", "image"] } },
+        "reasoning": { "type": "boolean" },
+        "validated": { "type": "boolean", "default": false },
+        "cost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input", "output", "cacheRead", "cacheWrite"],
+          "properties": {
+            "input": { "type": "number", "minimum": 0 },
+            "output": { "type": "number", "minimum": 0 },
+            "cacheRead": { "type": "number", "minimum": 0 },
+            "cacheWrite": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    }
+  }
+}
